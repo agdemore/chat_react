@@ -1,0 +1,7 @@
+build/.DS_Store
+build/bundle.js
+app_data.json
+.DS_Store
+user_data.json
+friends_data.json
+node_modules

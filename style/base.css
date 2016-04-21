@@ -1,0 +1,171 @@
+html {
+    font-family: sans-serif;
+}
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+    width: 3px;
+    height: 7px;
+    background-color: transparent;
+    border-left: 1px solid #cacaca;
+}
+*::-webkit-scrollbar-thumb {
+    background-color: #B7B7B7;
+}
+
+
+#app-navigation {
+    position: fixed;
+    height: 40px;
+    width: 100%;
+    z-index: 500;
+    background-color: #fff;
+    border-bottom: 1px solid #cacaca;
+}
+.navigation-inner {
+
+}
+.navigation-inner-list {
+    display: inline-flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.navigation-inner-list-element {
+    margin: 5px;
+    padding: 5px 10px;
+}
+
+
+#app-menu {
+    width: 60px;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    /*top: 41px;*/
+    background-color: #3C4661;
+    color: #fff;
+    z-index: 500;
+}
+.app-menu-inner {
+
+}
+.app-menu-inner-list {
+    margin: 0;
+    padding: 0;
+}
+.app-menu-inner-list-element {
+    text-align: center;
+    padding: 20px 0;
+    cursor: default;
+}
+.active {
+    background-color: #fff;
+    color: #000;
+}
+
+
+#app-container {
+    height: 100%;
+    width: 100%;
+    /*top: 41px;*/
+    left: 60px;
+    position: absolute;
+    /*overflow: auto;
+    border-right: 1px solid #cacaca;
+    overflow-x: hidden;*/
+    display: -webkit-inline-box;
+}
+
+#app-container-dialogs {
+    width: 300px;
+    position: relative;
+    overflow: auto;
+    overflow-x: hidden;
+    border-right: 1px solid #cacaca;
+}
+.app-container-inner {
+
+}
+
+
+
+.friends-list {
+}
+.list-element {
+    padding-left: 5px;
+    height: 58px;
+    cursor: default;
+}
+.list-element:hover {
+    background-color: #3C4661;
+    color: #fff;
+}
+.list-element-photo {
+    border-radius: 100px;
+}
+.list-element-photo img {
+    /*border-radius: 200px;*/
+    padding: 4px 0;
+}
+.friends-list-element-name {
+    padding: 20px 10px;
+}
+.friends-list-element-inner {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: inline-flex;
+    height: 59px;
+    width: 100%;
+}
+
+
+.dialogs-list {
+}
+.dialogs-list-element {
+    padding-left: 5px;
+    cursor: default;
+}
+.dialogs-list-element:hover {
+    background-color: #3C4661;
+    color: #fff;
+}
+.dialogs-list-element-inner {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: inline-flex;
+}
+.dialogs-list-element-info {
+    padding-left: 10px;
+}
+.dialogs-list-element-info-head {
+    display: inline-flex;
+}
+.dialogs-list-element-info-head-name {
+    padding: 5px 0 0 0;
+}
+.dialogs-list-element-info-head-date {
+    position: absolute;
+    font-size: x-small;
+    right: 10px;
+    padding-top: 5px;
+}
+.dialogs-list-element-info-head-body {
+    padding: 5px 0;
+}
+
+
+#app-container-messages {
+    width: 500px;
+    height: 100%;
+    /*position: absolute;*/
+    overflow: auto;
+    overflow-x: hidden;
+    border-right: 1px solid #cacaca;
+}
