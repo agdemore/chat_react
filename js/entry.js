@@ -12,13 +12,25 @@ let apiHelper = new Helper();
 
 
 let AppMenu = React.createClass({
+    switchMainView: function (view) {
+        if (view == 'friends') {
+            ReactDom.render(<FriendsBox />, document.getElementById('app-container-dialogs'));
+        } else if (view == 'dialogs') {
+            ReactDom.render(<DialogsBox />, document.getElementById('app-container-dialogs'));
+        } else if (view == 'settings') {
+            return;
+        }
+    },
     render: function() {
+        let friendsView = this.switchMainView.bind(this, 'friends');
+        let dialogsView = this.switchMainView.bind(this, 'dialogs');
+        let settingsView = this.switchMainView.bind(this, 'settings');
         return (
             <div className="app-menu-inner">
                 <div className="app-menu-inner-list">
-                    <div className="app-menu-inner-list-element" data-name='friends'>F</div>
-                    <div className="app-menu-inner-list-element active" data-name='dialogs'>D</div>
-                    <div className="app-menu-inner-list-element" data-name='settings'>S</div>
+                    <div className="app-menu-inner-list-element" onClick={friendsView}>F</div>
+                    <div className="app-menu-inner-list-element active" onClick={dialogsView}>D</div>
+                    <div className="app-menu-inner-list-element" onClick={settingsView}>S</div>
                 </div>
             </div>
         );
@@ -80,11 +92,14 @@ let FriendsBox = React.createClass({
     },
     componentDidMount: function() {
         this.getFriendsFromServer();
+        console.log('mount');
+        console.log(this.state);
     },
     componentWillUnmount: function () {
-        jQuery('#app-container-dialogs').empty();
+        // jQuery('#app-container-dialogs').empty();
     },
     render: function() {
+        this.getFriendsFromServer();
         return (
             <div className="app-container-inner">
                 <FriendsList data={this.state.data} />
@@ -273,10 +288,10 @@ jQuery(document).on('click', ".app-menu-inner-list-element", function() {
 
     jQuery(".app-menu-inner-list-element").removeClass('active');
     jQuery(this).toggleClass('active');
-    if (jQuery(this).attr('data-name') == 'friends') {
-        // ReactDom.render(<FriendsBox/>, document.getElementById('app-container-dialogs'));
-    } else if (jQuery(this).attr('data-name') == 'dialogs') {
-        ReactDom.render(<DialogsBox/>, document.getElementById('app-container-dialogs'));
-    }
-    jQuery('#app-container').height(appHeight - 41);
+    // if (jQuery(this).attr('data-name') == 'friends') {
+    //     // ReactDom.render(<FriendsBox/>, document.getElementById('app-container-dialogs'));
+    // } else if (jQuery(this).attr('data-name') == 'dialogs') {
+    //     ReactDom.render(<DialogsBox/>, document.getElementById('app-container-dialogs'));
+    // }
+    jQuery('#app-container').height(appHeight);
 });
