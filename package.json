@@ -23,6 +23,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babelify": "^7.2.0",
     "electron-prebuilt": "^0.37.2",
+    "fibers": "^1.0.13",
     "htmlparser2": "^3.9.0",
     "jquery": "^2.2.2",
     "json-loader": "^0.5.4",
@@ -30,6 +31,7 @@
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "request": "^2.65.0",
+    "wait.for": "^0.6.6",
     "webpack": "^1.12.14"
   },
   "devDependencies": {

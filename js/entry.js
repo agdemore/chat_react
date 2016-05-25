@@ -7,7 +7,6 @@ import Helper from '../helper';
 let Promise = require('promise');
 let fs = require('fs');
 let jQuery = require('jquery');
-
 let apiHelper = new Helper();
 
 
@@ -99,7 +98,6 @@ let FriendsBox = React.createClass({
         // jQuery('#app-container-dialogs').empty();
     },
     render: function() {
-        this.getFriendsFromServer();
         return (
             <div className="app-container-inner">
                 <FriendsList data={this.state.data} />
@@ -113,6 +111,7 @@ let DialogsList = React.createClass({
         console.log(text);
     },
     render: function() {
+        console.log('data', this.props.data);
         let u = JSON.parse(fs.readFileSync(__dirname + '/friends_data.json'));
         let friendsNodes = this.props.data.map(function(dialog) {
             let body = (dialog.message.body.length > 20) ? dialog.message.body.substr(0,20) + '...' : dialog.message.body;
@@ -177,6 +176,7 @@ let DialogsBox = React.createClass({
         jQuery('#app-container-dialogs').empty();
     },
     handleScroll: function() {
+        // FRIENDS DELETE SCROLL EVENTS
         let elem = jQuery('#app-container-dialogs')
         if (elem.scrollTop() + elem.innerHeight()  == elem[0].scrollHeight) {
             let page = jQuery('.app-container-inner').attr('data-pagination')
