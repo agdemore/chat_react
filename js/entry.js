@@ -62,29 +62,20 @@ let FriendsBox = React.createClass({
     getFriendsFromServer: function() {
         apiHelper.getFriends()
             .then(friends => {
-                // this.setState({data: friends});
-                this.saveFriends(friends);
-                return friends;
+                let frnds = {};
+                for (let f of friends) {
+                    frnds[usr.id] = {
+                        'first_name': f.first_name,
+                        'last_name': f.last_name,
+                        'photo': f.photo_50
+                    }
+                }
+                return frnds;
             })
-            .then(friends => {
+            .then(frnds => {
                 // this.saveFriends(friends);
-                this.setState({data: friends});
+                this.setState({data: frnds});
             })
-    },
-    saveFriends: function(friends) {
-        let toWrite = {};
-        for (let i = 0; i < friends.length; i++) {
-            let uid = friends[i]['id'];
-            let firstName = friends[i]['first_name'];
-            let lastName = friends[i]['last_name'];
-            let photoUrl = friends[i]['photo_50'];
-            toWrite[uid] = {
-                    'first_name': firstName,
-                    'last_name': lastName,
-                    'photo': photoUrl
-            };
-        }
-        fs.writeFileSync(__dirname + '/friends_data.json', JSON.stringify(toWrite));
     },
     getInitialState: function() {
         return {data: []};
@@ -115,21 +106,40 @@ let DialogsList = React.createClass({
     onDialogClick: function(text, e) {
         console.log(text);
     },
-    componentDidMount: function() {
-
-    },
     getUsers: function (ids, fields) {
         apiHelper.getUsers(ids, fields)
             .then(users => {
-                console.log(users);
+                let u = {};
+                for (let usr of users) {
+                    u[usr.id] = {
+                        'first_name': usr.first_name,
+                        'last_name': usr.last_name,
+                        'photo': usr.photo_50
+                    }
+                }
             })
     },
-    getIdsFromDialogs: function () {
-
+    getIdsFromDialogs: function (data) {
+        let usersIds = [];
+        data.map(function (dialog) {
+            if (dialog.message.user_id) {
+                let uid = dialog.message.user_id;
+                usersIds.push(uid);
+            }
+        })
+        console.log(usersIds);
+        let idsString = usersIds.join(',');
+        console.log(idsString);
+        return idsString;
     },
     render: function() {
         console.log('data', this.props.data);
-        // let u = JSON.parse(fs.readFileSync(__dirname + '/friends_data.json'));
+
+        let ids = this.getIdsFromDialogs(this.props.data);
+        let fields = 'first_name,last_name,photo_50';
+        this.getUsers(ids, fields);
+
+        let u = this.state.users;// JSON.parse(fs.readFileSync(__dirname + '/friends_data.json'));
         let friendsNodes = this.props.data.map(function(dialog) {
             let body = (dialog.message.body.length > 20) ? dialog.message.body.substr(0,20) + '...' : dialog.message.body;
 

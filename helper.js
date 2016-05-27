@@ -91,13 +91,13 @@ class Helper {
         return new Promise((resolve, reject) => {
             request({
                 url: 'https://api.vk.com/method/users.get?' +
-                        'users_ids=' + usersString + '&fields=' + fields + '&v=5.38'
+                        'user_ids=' + usersString + '&fields=' + fields + '&v=5.38'
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
                 } else {
                     let usersJson = JSON.parse(response.body);
-                    let users = usersJson.response.items;
+                    let users = usersJson.response;
                     resolve(users);
                 }
             })
