@@ -87,6 +87,7 @@ body {
     overflow: auto;
     overflow-x: hidden;
     border-right: 1px solid #cacaca;
+    height: 100%;
 }
 .app-container-inner {
 
