@@ -62,19 +62,7 @@ let FriendsBox = React.createClass({
     getFriendsFromServer: function() {
         apiHelper.getFriends()
             .then(friends => {
-                let frnds = {};
-                for (let f of friends) {
-                    frnds[usr.id] = {
-                        'first_name': f.first_name,
-                        'last_name': f.last_name,
-                        'photo': f.photo_50
-                    }
-                }
-                return frnds;
-            })
-            .then(frnds => {
-                // this.saveFriends(friends);
-                this.setState({data: frnds});
+                this.setState({data: friends});
             })
     },
     getInitialState: function() {
@@ -82,8 +70,6 @@ let FriendsBox = React.createClass({
     },
     componentDidMount: function() {
         this.getFriendsFromServer();
-        console.log('mount');
-        console.log(this.state);
     },
     componentWillUnmount: function () {
         // jQuery('#app-container-dialogs').empty();
@@ -98,48 +84,12 @@ let FriendsBox = React.createClass({
 });
 
 let DialogsList = React.createClass({
-    getInitialState: function () {
-        return {
-            users: {}
-        };
-    },
     onDialogClick: function(text, e) {
         console.log(text);
     },
-    getUsers: function (ids, fields) {
-        apiHelper.getUsers(ids, fields)
-            .then(users => {
-                let u = {};
-                for (let usr of users) {
-                    u[usr.id] = {
-                        'first_name': usr.first_name,
-                        'last_name': usr.last_name,
-                        'photo': usr.photo_50
-                    }
-                }
-            })
-    },
-    getIdsFromDialogs: function (data) {
-        let usersIds = [];
-        data.map(function (dialog) {
-            if (dialog.message.user_id) {
-                let uid = dialog.message.user_id;
-                usersIds.push(uid);
-            }
-        })
-        console.log(usersIds);
-        let idsString = usersIds.join(',');
-        console.log(idsString);
-        return idsString;
-    },
     render: function() {
-        console.log('data', this.props.data);
 
-        let ids = this.getIdsFromDialogs(this.props.data);
-        let fields = 'first_name,last_name,photo_50';
-        this.getUsers(ids, fields);
-
-        let u = this.state.users;// JSON.parse(fs.readFileSync(__dirname + '/friends_data.json'));
+        let u = this.props.users;// JSON.parse(fs.readFileSync(__dirname + '/friends_data.json'));
         let friendsNodes = this.props.data.map(function(dialog) {
             let body = (dialog.message.body.length > 20) ? dialog.message.body.substr(0,20) + '...' : dialog.message.body;
 
@@ -190,17 +140,21 @@ let DialogsBox = React.createClass({
             .then(dialogs => {
                 let d = this.state.data.concat(dialogs)
                 this.setState({data: d});
+                return d;
+            })
+            .then(d => {
+                this.getIdsFromDialogs(d);
             });
     },
     getInitialState: function() {
-        return {data: []};
+        return {data: [], users: {}};
     },
     componentDidMount: function() {
         this.getDialogsFromServer('0');
         jQuery('#app-container-dialogs').on('scroll', this.handleScroll);
     },
     componentWillUnmount: function () {
-        jQuery('#app-container-dialogs').empty();
+        jQuery('#app-container-dialogs').off('scroll', this.handleScroll);
     },
     handleScroll: function() {
         // FRIENDS DELETE SCROLL EVENTS
@@ -212,10 +166,39 @@ let DialogsBox = React.createClass({
             jQuery('.app-container-inner').attr('data-pagination', parseInt(page) + 20)
         }
     },
+    getUsers: function (ids, fields) {
+        apiHelper.getUsers(ids, fields)
+            .then(users => {
+                let u = {};
+                for (let usr of users) {
+                    u[usr.id] = {
+                        'first_name': usr.first_name,
+                        'last_name': usr.last_name,
+                        'photo': usr.photo_50
+                    }
+                }
+                return u;
+            })
+            .then(u => {
+                this.setState({users: u});
+            })
+    },
+    getIdsFromDialogs: function (data) {
+        let usersIds = [];
+        data.map(function (dialog) {
+            if (dialog.message.user_id) {
+                let uid = dialog.message.user_id;
+                usersIds.push(uid);
+            }
+        });
+        let idsString = usersIds.join(',');
+        let fields = 'first_name,last_name,photo_50';
+        this.getUsers(idsString, fields);
+    },
     render: function() {
         return (
             <div className="app-container-inner" data-pagination="20">
-                <DialogsList data={this.state.data} />
+                <DialogsList data={this.state.data} users={this.state.users}/>
             </div>
         );
     }
@@ -257,20 +240,12 @@ let UserMessagesBox = React.createClass({
         return {data: [], id: ''};
     },
     componentDidMount: function() {
-    //     // let firstMessage = jQuery('.messages-list div:first');
-        // this.getMessagesFromServer(this.props.items, '0');
-        console.log('did mount: ', this.state.id);
-    //     jQuery('#app-container-messages').on('scroll', this.handleScroll);
-    //     console.log(jQuery('#app-container-messages')[0].scrollHeight);
-    //     jQuery('#app-container-messages').scrollTop(1000);
-    //     // jQuery('.right-menu-content').scrollTop(firstMessage.offset().top - 50);
     },
     componentWillUnmount: function () {
         console.log('unmount');
     },
     componentWillMount: function () {
         // this.getMessagesFromServer(this.props.items, '0');
-        console.log('wil mount: ', this.props.id);
         this.setState({id: this.props.id})
     },
     handleScroll: function() {
