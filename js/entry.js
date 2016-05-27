@@ -107,12 +107,29 @@ let FriendsBox = React.createClass({
 });
 
 let DialogsList = React.createClass({
+    getInitialState: function () {
+        return {
+            users: {}
+        };
+    },
     onDialogClick: function(text, e) {
         console.log(text);
     },
+    componentDidMount: function() {
+
+    },
+    getUsers: function (ids, fields) {
+        apiHelper.getUsers(ids, fields)
+            .then(users => {
+                console.log(users);
+            })
+    },
+    getIdsFromDialogs: function () {
+
+    },
     render: function() {
         console.log('data', this.props.data);
-        let u = JSON.parse(fs.readFileSync(__dirname + '/friends_data.json'));
+        // let u = JSON.parse(fs.readFileSync(__dirname + '/friends_data.json'));
         let friendsNodes = this.props.data.map(function(dialog) {
             let body = (dialog.message.body.length > 20) ? dialog.message.body.substr(0,20) + '...' : dialog.message.body;
 
