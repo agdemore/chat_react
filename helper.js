@@ -12,10 +12,12 @@ vkAuth.authenticate();
 
 let appData = JSON.parse(fs.readFileSync(__dirname + '/app_data.json'));
 
-class Helper {
-    constructor() {
+export default class Helper {
+    constructor(access_token, expires_in, user_id) {
         this.accessToken = appData.access_token;
         this.userId = appData.user_id;
+        // this.accessToken = access_token;
+        // this.userId = user_id;
     }
 
     getFriends() {
@@ -104,6 +106,3 @@ class Helper {
         })
     }
 }
-
-
-export default Helper;

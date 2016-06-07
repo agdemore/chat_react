@@ -30,7 +30,7 @@ if (appWidth == originWidth) {
 }
 
 
-$('#app-container').height(appHeight - 41);
+$('#app-container-main').height(appHeight - 51);
 
 
 $('.right-menu-content').height(appHeight - 39 - 52);
@@ -41,6 +41,7 @@ $(window).resize(function() {
     var wHeight = $(window).height();
     $('.left-menu').height(wHeight - 39);
     $('.right-menu-content').height(wHeight - 39 - 52);
+    $('#app-container-main').height(wHeight - 51);
     if (wWidth < 870) {
         $('.left-top').addClass('hide-element');
 

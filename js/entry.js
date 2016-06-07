@@ -72,6 +72,7 @@ let FriendsBox = React.createClass({
         this.getFriendsFromServer();
     },
     componentWillUnmount: function () {
+        ReactDom.unmountComponentAtNode(document.getElementById('app-container-dialogs'))
         // jQuery('#app-container-dialogs').empty();
     },
     render: function() {
@@ -107,21 +108,21 @@ let DialogsList = React.createClass({
             let readState = dialog.message.read_state;
             return (
                 <div className="list-element" data-dialog_id={mid} key={dialog.message.id} data-type={dialog_type} >
-                    <div className="dialogs-list-element-inner">
-                        <div className="list-element-photo"><img src={photo} /></div>
-                        <div className="dialogs-list-element-info">
-                            <div className="dialogs-list-element-info-head">
-                                <div className="dialogs-list-element-info-head-name">
-                                    {title}
-                                </div>
-                                <div className="dialogs-list-element-info-head-date">
-                                    {cdate}
-                                </div>
+                    <div className="list-element-photo">
+                        <img src={photo} />
+                    </div>
+                    <div className="dialogs-list-element-info">
+                        <div className="dialogs-list-element-info-head">
+                            <div className="dialogs-list-element-info-head-name">
+                                {title}
                             </div>
-                            <div className="dialogs-list-element-info-head-body">
-                                {body}
-                            </div>
+                            {/*<div className="dialogs-list-element-info-head-date">
+                                {cdate}
+                            </div>*/}
                         </div>
+                        {/*<div className="dialogs-list-element-info-head-body">
+                            {body}
+                        </div>*/}
                     </div>
                 </div>
             );
@@ -268,21 +269,37 @@ let UserMessagesBox = React.createClass({
     }
 });
 
+let App = React.createClass({
+    getInitialState: function() {
+        return {
+            "client_id": "5309107",
+            "app_scope": "offline,friends,messages"
+        };
+    },
+    componentDidMount: function() {
+        //make vk_auth return promise then set state with token and so on
+        //create object helper and pass to props
+    },
+    render: function() {
+        return (
+            <div id='app-container'>
+                <div id='app-container-top'>
+
+                </div>
+                <div id="app-container-main">
+                    <div id="app-container-dialogs">
+                        <DialogsBox />
+                    </div>
+                    <div id="app-container-main-messages">
+                    </div>
+                </div>
+            </div>
+        );
+    }
+})
 
 
-ReactDom.render(<AppMenu/>, document.getElementById('app-menu'));
-ReactDom.render(<DialogsBox />, document.getElementById('app-container-dialogs'));
-
-
-// jQuery(document).on('click', ".list-element", function() {
-//     let type = jQuery(this).attr('data-type');
-//     let mid = jQuery(this).attr('data-dialog_id')
-//     if (type == 'tet-a-tet') {
-//         ReactDom.render(<UserMessagesBox id={mid}/>, document.getElementById('app-container-messages'));
-//     } else if (type == 'chat') {
-//
-//     }
-// });
+ReactDom.render(<App />, document.getElementById('app'));
 
 jQuery(document).on('click', ".app-menu-inner-list-element", function() {
     let appWidth = $(window).width();
@@ -290,10 +307,5 @@ jQuery(document).on('click', ".app-menu-inner-list-element", function() {
 
     jQuery(".app-menu-inner-list-element").removeClass('active');
     jQuery(this).toggleClass('active');
-    // if (jQuery(this).attr('data-name') == 'friends') {
-    //     // ReactDom.render(<FriendsBox/>, document.getElementById('app-container-dialogs'));
-    // } else if (jQuery(this).attr('data-name') == 'dialogs') {
-    //     ReactDom.render(<DialogsBox/>, document.getElementById('app-container-dialogs'));
-    // }
     jQuery('#app-container').height(appHeight);
 });
