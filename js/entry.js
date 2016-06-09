@@ -8,34 +8,7 @@ let Promise = require('promise');
 let fs = require('fs');
 let jQuery = require('jquery');
 let apiHelper = new Helper();
-
-
-let AppMenu = React.createClass({
-    switchMainView: function (view) {
-        if (view == 'friends') {
-            ReactDom.render(<FriendsBox />, document.getElementById('app-container-dialogs'));
-        } else if (view == 'dialogs') {
-            ReactDom.render(<DialogsBox />, document.getElementById('app-container-dialogs'));
-        } else if (view == 'settings') {
-            return;
-        }
-    },
-    render: function() {
-        let friendsView = this.switchMainView.bind(this, 'friends');
-        let dialogsView = this.switchMainView.bind(this, 'dialogs');
-        let settingsView = this.switchMainView.bind(this, 'settings');
-        return (
-            <div className="app-menu-inner">
-                <div className="app-menu-inner-list">
-                    <div className="app-menu-inner-list-element" onClick={friendsView}>F</div>
-                    <div className="app-menu-inner-list-element active" onClick={dialogsView}>D</div>
-                    <div className="app-menu-inner-list-element" onClick={settingsView}>S</div>
-                </div>
-            </div>
-        );
-    }
-});
-
+let vkAuth = require('./vk_auth');
 
 let FriendsList = React.createClass({
     render: function() {
@@ -84,6 +57,26 @@ let FriendsBox = React.createClass({
     }
 });
 
+let DialogsListElement = React.createClass({
+    onDialogClick: function(text, e) {
+        console.log(text);
+    },
+    render: function() {
+        <div onClick={this.onDialogClick.bind(this, 'hello')}>
+            <div className="list-element-photo">
+                <img src={this.props.photo} />
+            </div>
+            <div className="dialogs-list-element-info">
+                <div className="dialogs-list-element-info-head">
+                    <div className="dialogs-list-element-info-head-name">
+                        {this.props.title}
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+})
+
 let DialogsList = React.createClass({
     onDialogClick: function(text, e) {
         console.log(text);
@@ -108,22 +101,7 @@ let DialogsList = React.createClass({
             let readState = dialog.message.read_state;
             return (
                 <div className="list-element" data-dialog_id={mid} key={dialog.message.id} data-type={dialog_type} >
-                    <div className="list-element-photo">
-                        <img src={photo} />
-                    </div>
-                    <div className="dialogs-list-element-info">
-                        <div className="dialogs-list-element-info-head">
-                            <div className="dialogs-list-element-info-head-name">
-                                {title}
-                            </div>
-                            {/*<div className="dialogs-list-element-info-head-date">
-                                {cdate}
-                            </div>*/}
-                        </div>
-                        {/*<div className="dialogs-list-element-info-head-body">
-                            {body}
-                        </div>*/}
-                    </div>
+                    <DialogsListElement photo={photo} title={title} />
                 </div>
             );
         });
@@ -273,11 +251,22 @@ let App = React.createClass({
     getInitialState: function() {
         return {
             "client_id": "5309107",
-            "app_scope": "offline,friends,messages"
+            "app_scope": "offline,friends,messages",
+            'access_token': '',
+            'expires_in': '',
+            'user_id': ''
         };
     },
     componentDidMount: function() {
         //make vk_auth return promise then set state with token and so on
+        vkAuth.authenticate()
+            .then(answer => {
+                this.setState({
+                    'access_token': answer.access_token,
+                    'expires_in': answer.expires_in,
+                    'user_id': answer.user_id
+                })
+            })
         //create object helper and pass to props
     },
     render: function() {
