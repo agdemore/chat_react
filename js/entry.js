@@ -252,9 +252,7 @@ let App = React.createClass({
         return {
             "client_id": "5309107",
             "app_scope": "offline,friends,messages",
-            'access_token': '',
-            'expires_in': '',
-            'user_id': ''
+            'userData': {}
         };
     },
     componentDidMount: function() {
@@ -262,9 +260,7 @@ let App = React.createClass({
         vkAuth.authenticate()
             .then(answer => {
                 this.setState({
-                    'access_token': answer.access_token,
-                    'expires_in': answer.expires_in,
-                    'user_id': answer.user_id
+                    'userData': answer
                 })
             })
         //create object helper and pass to props
